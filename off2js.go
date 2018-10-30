@@ -21,13 +21,14 @@ func toInt(s string) int {
 	return i
 }
 
-
 func main() {
 	inPtr := flag.String("i", "foo.off", "the desired input file name")
 	outPtr := flag.String("o", "foo.js", "the desired output file name")
 	modelPtr := flag.String("m", "FooModel", "the desired model name")
 
 	flag.Parse()
+
+	vertices := []float64{0, 0, 0}
 
 	fmt.Println("in: ", *inPtr)
 	fmt.Println("out: ", *outPtr)
@@ -58,7 +59,14 @@ func main() {
 					fmt.Println(numVertices, numFaces)
 				} else if numVertices != 0 && numFaces != 0 {
 					if !verticesRead {
-						fmt.Println("Vertex: ", scanner.Text())
+						verts := strings.Fields(scanner.Text())
+						for k := 0; k < 3; k++{
+							vert, err := strconv.ParseFloat(verts[k], 64)
+							check(err)
+							vertices[k] = vert
+						}
+						check(err)
+						fmt.Println(vertices)
 						i++
 						if i == numVertices { verticesRead = true }
 					} else {
