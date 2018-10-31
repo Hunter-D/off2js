@@ -25,12 +25,12 @@ func getTriangles(verts [][3]float64, faces [][]string) [][3]float64{
 	var triangles [][3]float64
 	for i := 0; i < len(faces); i++ {
 		numPoints := toInt(faces[i][0])
-		for j := 1; j <= numPoints; j++ {
-			vertIndex := toInt(faces[i][j])
-			triangles = append(triangles, verts[vertIndex])
-			fmt.Println(vertIndex)
+		point0 := toInt(faces[i][1])
+		for j := 1; j <= numPoints - 2; j++ {
+			point1 := toInt(faces[i][j+1])
+			point2 := toInt(faces[i][j+2])
+			triangles = append(triangles, verts[point0], verts[point1], verts[point2])
 		}
-		fmt.Println(numPoints)
 	}
 	return triangles
 }
@@ -96,8 +96,8 @@ func main() {
 		fmt.Println("No OFF header found")
 		os.Exit(0)
 	}
-	fmt.Println(vertexArray)
-	fmt.Println(faces)
+	fmt.Println("vertex array: ", vertexArray)
+	fmt.Println("faces: ", faces)
 	something := getTriangles(vertexArray, faces)
-	fmt.Println(something)
+	fmt.Println("triangles: ", something)
 }
