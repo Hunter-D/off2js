@@ -21,6 +21,20 @@ func toInt(s string) int {
 	return i
 }
 
+func getTriangles(verts [][3]float64, faces [][]string) [][3]float64{
+	var triangles [][3]float64
+	for i := 0; i < len(faces); i++ {
+		numPoints := toInt(faces[i][0])
+		for j := 1; j <= numPoints; j++ {
+			vertIndex := toInt(faces[i][j])
+			triangles = append(triangles, verts[vertIndex])
+			fmt.Println(vertIndex)
+		}
+		fmt.Println(numPoints)
+	}
+	return triangles
+}
+
 func main() {
 	inPtr := flag.String("i", "foo.off", "the desired input file name")
 	outPtr := flag.String("o", "foo.js", "the desired output file name")
@@ -28,7 +42,10 @@ func main() {
 
 	flag.Parse()
 
-	vertices := []float64{0, 0, 0}
+	vertices := [...]float64{0, 0, 0}
+	var vertexArray [][3]float64
+
+	var faces [][]string
 
 	fmt.Println("in: ", *inPtr)
 	fmt.Println("out: ", *outPtr)
@@ -41,7 +58,6 @@ func main() {
 	scanner := bufio.NewScanner(input)
 	scanner.Scan()
 
-	// If this is an OFF file
 	if strings.ToUpper(scanner.Text()) == "OFF" {
 		var numVertices int
 		var numFaces int
@@ -49,7 +65,6 @@ func main() {
 		verticesRead := false
 		i := 0
 		for scanner.Scan() {
-			// Do stuff if the line is not a comment
 			if !(string(scanner.Text()[0]) == "#"){
 				if !gotCounts {
 					nums := strings.Fields(scanner.Text())
@@ -60,17 +75,16 @@ func main() {
 				} else if numVertices != 0 && numFaces != 0 {
 					if !verticesRead {
 						verts := strings.Fields(scanner.Text())
-						for k := 0; k < 3; k++{
+						for k := 0; k < 3; k++ {
 							vert, err := strconv.ParseFloat(verts[k], 64)
 							check(err)
 							vertices[k] = vert
 						}
-						check(err)
-						fmt.Println(vertices)
+						vertexArray = append(vertexArray, vertices)
 						i++
 						if i == numVertices { verticesRead = true }
 					} else {
-						fmt.Println("Face: ", scanner.Text())
+						faces = append(faces, strings.Fields(scanner.Text()))
 					}
 				} else {
 					fmt.Println("Cannot define a model")
@@ -82,4 +96,8 @@ func main() {
 		fmt.Println("No OFF header found")
 		os.Exit(0)
 	}
+	fmt.Println(vertexArray)
+	fmt.Println(faces)
+	something := getTriangles(vertexArray, faces)
+	fmt.Println(something)
 }
