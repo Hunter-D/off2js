@@ -102,8 +102,13 @@ func main() {
 	something := getTriangles(vertexArray, faces, &BC)
 
 	tri, _ := json.Marshal(something)
-	fmt.Println(string(tri))
-
 	bary, _ := json.Marshal(BC)
-	fmt.Println(string(bary))
+
+	funcString := []string{"function ", *modelPtr, "() {\n\tthis.triangles = ", string(tri), ";\n\tthis.BC = ", string(bary), "; };"}
+
+	outFile, err := os.Create(*outPtr)
+	check(err)
+	defer outFile.Close()
+
+	outFile.WriteString(strings.Join(funcString, ""))
 }
