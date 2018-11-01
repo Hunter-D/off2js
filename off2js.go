@@ -21,7 +21,7 @@ func toInt(s string) int {
 	return i
 }
 
-func getTriangles(verts [][3]float64, faces [][]string) [][3]float64{
+func getTriangles(verts [][3]float64, faces [][]string, BC *[][3]int) [][3]float64{
 	var triangles [][3]float64
 	for i := 0; i < len(faces); i++ {
 		numPoints := toInt(faces[i][0])
@@ -30,6 +30,7 @@ func getTriangles(verts [][3]float64, faces [][]string) [][3]float64{
 			point1 := toInt(faces[i][j+1])
 			point2 := toInt(faces[i][j+2])
 			triangles = append(triangles, verts[point0], verts[point1], verts[point2])
+			*BC = append(*BC, [...]int{1, 0, 0}, [...]int{0, 1, 0}, [...]int{0, 0, 1})
 		}
 	}
 	return triangles
@@ -46,6 +47,7 @@ func main() {
 	var vertexArray [][3]float64
 
 	var faces [][]string
+	var BC [][3]int
 
 	fmt.Println("in: ", *inPtr)
 	fmt.Println("out: ", *outPtr)
@@ -97,7 +99,11 @@ func main() {
 		os.Exit(0)
 	}
 	fmt.Println("vertex array: ", vertexArray)
+	fmt.Println()
 	fmt.Println("faces: ", faces)
-	something := getTriangles(vertexArray, faces)
+	fmt.Println()
+	something := getTriangles(vertexArray, faces, &BC)
 	fmt.Println("triangles: ", something)
+	fmt.Println("BC: ", BC)
+	fmt.Println(len(something), len(BC))
 }
