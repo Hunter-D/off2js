@@ -40,7 +40,7 @@ func getTriangles(verts [][3]float64, faces [][]string, BC *[][3]int) [][3]float
 func main() {
 	inPtr := flag.String("i", "foo.off", "the desired input file name")
 	outPtr := flag.String("o", "foo.js", "the desired output file name")
-	modelPtr := flag.String("m", "FooModel", "the desired model name")
+	modelPtr := flag.String("modelName", "CubeModel", "the desired model name")
 
 	flag.Parse()
 
