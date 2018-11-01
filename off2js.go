@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -98,12 +99,11 @@ func main() {
 		fmt.Println("No OFF header found")
 		os.Exit(0)
 	}
-	fmt.Println("vertex array: ", vertexArray)
-	fmt.Println()
-	fmt.Println("faces: ", faces)
-	fmt.Println()
 	something := getTriangles(vertexArray, faces, &BC)
-	fmt.Println("triangles: ", something)
-	fmt.Println("BC: ", BC)
-	fmt.Println(len(something), len(BC))
+
+	tri, _ := json.Marshal(something)
+	fmt.Println(string(tri))
+
+	bary, _ := json.Marshal(BC)
+	fmt.Println(string(bary))
 }
